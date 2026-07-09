@@ -117,8 +117,7 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 
 #### 4. `src/options/` (Settings UI)
 
-- Modern gradient UI with animated slider
-- Live badge preview
+- Minimalist, corporate-styled UI with a live badge preview slider
 - Persistent user configuration
 
 ### Resiliency: The "Favicon War"
@@ -226,13 +225,15 @@ TabFlow/
 │   │       (plus other .js/.cjs pairs — see CONTRIBUTING.md)
 │   ├── options/
 │   │   ├── options.html            # Settings UI
-│   │   ├── options.css             # Modern gradient design
+│   │   ├── options.css             # Minimalist, corporate-styled design
 │   │   └── options.js              # Settings interaction
 │   ├── icons/
 │   │   ├── icon16.png
 │   │   ├── icon48.png
 │   │   └── icon128.png
 │   └── manifest.json               # Chrome Extension manifest (V3)
+├── scripts/
+│   └── package-extension.js        # Builds dist/TabFlow-v<version>.zip (npm run package)
 ├── tests/                          # Jest unit tests (mirrors src/lib/)
 ├── .editorconfig                   # Editor-agnostic formatting rules
 ├── .gitignore                      # Git exclusions
@@ -241,6 +242,7 @@ TabFlow/
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md                 # Contribution guidelines
 ├── LICENSE                         # MIT License
+├── PRIVACY.md                      # Privacy policy (Chrome Web Store requirement)
 ├── package.json                    # NPM dependencies & scripts
 └── README.md                       # This file
 ```
@@ -371,7 +373,7 @@ This project was built with:
 - **MutationObserver API** (favicon monitoring)
 - **Chrome Storage API** (state persistence)
 - **Jest** (unit testing)
-- **CSS3** (modern UI with gradients, animations)
+- **CSS3** (minimalist, corporate-styled UI with animated transitions)
 
 ---
 
@@ -412,7 +414,7 @@ Built by **Kayque Reis** as a demonstration of production-grade browser extensio
 
 - ✅ Clean architecture (separation of concerns)
 - ✅ Comprehensive testing (Jest unit tests)
-- ✅ Modern UI/UX (gradient design, animations)
+- ✅ Modern UI/UX (minimalist, corporate design)
 - ✅ Professional documentation (README, CONTRIBUTING)
 - ✅ State persistence (chrome.storage.session)
 
