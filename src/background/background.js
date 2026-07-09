@@ -4,31 +4,32 @@ import { isValidMaxHistorySize, isTrustedSender } from '../lib/messageValidation
 import { isExpectedSendMessageError, getBroadcastTargetTabIds } from '../lib/tabMessaging.js';
 import { isSessionStorageAvailable } from '../lib/storageAvailability.js';
 import { resolvePositionResponse } from '../lib/positionRequest.js';
+import { createOnceInitializer } from '../lib/onceInit.js';
 
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
-
-// Flag para garantir que o histórico foi carregado antes de processar eventos
-let isHistoryLoaded = false;
 
 // IDs das abas notificadas no último broadcast, para saber quais precisam
 // ser limpas (position -1) quando saem do histórico rastreado
 let lastBroadcastTabIds = [];
 
+// Garante que o histórico só é carregado uma vez, mesmo se onActivated
+// disparar antes da inicialização terminar
+const ensureHistoryLoaded = createOnceInitializer(loadHistoryFromStorage);
+
 // Inicialização: carrega histórico salvo e configurações
 (async function init() {
-  await loadHistoryFromStorage();
+  await ensureHistoryLoaded();
   await loadSettings();
-  isHistoryLoaded = true;
 })();
 
 chrome.runtime.onStartup.addListener(async () => {
-  await loadHistoryFromStorage();
+  await ensureHistoryLoaded();
   await loadSettings();
 });
 
 chrome.runtime.onInstalled.addListener(async () => {
-  await loadHistoryFromStorage();
+  await ensureHistoryLoaded();
   await loadSettings();
 });
 
@@ -78,11 +79,8 @@ async function loadSettings() {
 
 chrome.tabs.onActivated.addListener(async function(activeInfo) {
   // Aguarda histórico ser carregado antes de processar
-  if (!isHistoryLoaded) {
-    await loadHistoryFromStorage();
-    isHistoryLoaded = true;
-  }
-  
+  await ensureHistoryLoaded();
+
   historyManager.activateTab(activeInfo.tabId);
   saveHistoryToStorage(); // Persiste o novo estado
   broadcastHistory();
