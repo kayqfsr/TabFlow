@@ -324,6 +324,12 @@ Before/After screenshots
 
 ---
 
+## 🔒 Security Considerations
+
+### Permission Scope
+
+TabFlow requests `host_permissions` and `content_scripts.matches` for all `http(s)://*/*` origins. This is broader than `activeTab` on purpose: the badge must render on tabs that are *not* currently active (any tab present in the tracked history gets its favicon updated on every activation event), and the content script needs to run at `document_start` on page load without waiting for user interaction. `activeTab` only grants access after an explicit user gesture on the active tab, which is incompatible with these requirements. Only permissions the code actually calls (`tabs`, `storage`) are declared — do not add `scripting` or other capabilities unless a change genuinely requires them.
+
 ## 🎯 Priority Areas for Contribution
 
 **Good for first-time contributors:**

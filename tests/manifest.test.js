@@ -14,6 +14,10 @@ function isBroadWildcard(pattern) {
 }
 
 describe('manifest.json permissions', () => {
+  test('permissions list only requests capabilities the extension actually uses', () => {
+    expect(manifest.permissions.sort()).toEqual(['storage', 'tabs']);
+  });
+
   test('host_permissions does not use the unrestricted <all_urls> wildcard', () => {
     expect(manifest.host_permissions.some(isBroadWildcard)).toBe(false);
   });

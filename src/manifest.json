@@ -3,7 +3,7 @@
   "name": "TabFlow",
   "version": "2.0.1",
   "description": "Visualize your browsing context.",
-  "permissions": ["tabs", "storage", "scripting"],
+  "permissions": ["tabs", "storage"],
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "background/background.js",
