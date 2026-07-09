@@ -6,7 +6,7 @@ export default [
   js.configs.recommended,
   eslintConfigPrettier,
   {
-    ignores: ['coverage/', 'node_modules/'],
+    ignores: ['coverage/', 'node_modules/', 'dist/'],
   },
   {
     files: ['src/**/*.js'],
