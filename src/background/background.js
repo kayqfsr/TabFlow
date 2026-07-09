@@ -1,5 +1,6 @@
 // background.js
 import { TabHistoryManager } from '../lib/historyLogic.js';
+import { isValidMaxHistorySize, isTrustedSender } from '../lib/messageValidation.js';
 
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
@@ -87,9 +88,16 @@ function broadcastHistory() {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (!isTrustedSender(sender, chrome.runtime.id)) {
+    return;
+  }
+
   if (request.action === 'getHistory') {
     sendResponse({ history: historyManager.getHistory() });
   } else if (request.action === 'updateSettings') {
+    if (!isValidMaxHistorySize(request.maxHistorySize)) {
+      return;
+    }
     historyManager.setMaxSize(request.maxHistorySize);
     chrome.storage.sync.set({ maxHistorySize: request.maxHistorySize });
     saveHistoryToStorage(); // Salva histórico ajustado ao novo tamanho
