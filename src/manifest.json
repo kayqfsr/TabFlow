@@ -16,6 +16,12 @@
       "run_at": "document_start"
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/headObserver.js"],
+      "matches": ["http://*/*", "https://*/*"]
+    }
+  ],
   "action": {
     "default_popup": "options/options.html",
     "default_title": "TabFlow",

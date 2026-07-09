@@ -6,12 +6,9 @@ let ctx = canvas.getContext('2d');
 let currentPosition = -1;
 let faviconObserver = null;
 
-// Inicializa
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initFaviconObserver);
-} else {
-  initFaviconObserver();
-}
+import(chrome.runtime.getURL('lib/headObserver.js')).then(function(module) {
+  module.waitForHead(document, initFaviconObserver);
+});
 
 requestCurrentPosition();
 
@@ -25,10 +22,7 @@ function requestCurrentPosition() {
   });
 }
 
-function initFaviconObserver() {
-  const head = document.head;
-  if (!head) return;
-
+function initFaviconObserver(head) {
   faviconObserver = new MutationObserver(function(mutations) {
     let shouldReapply = false;
 
