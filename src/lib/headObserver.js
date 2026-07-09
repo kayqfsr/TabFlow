@@ -1,5 +1,5 @@
-// headObserver.js
-export function waitForHead(doc, callback) {
+// headObserver.js - loaded as a classic content script, exposes TabFlowLib.waitForHead
+function waitForHead(doc, callback) {
   if (doc.head) {
     callback(doc.head);
     return;
@@ -22,3 +22,6 @@ export function waitForHead(doc, callback) {
 
   rootObserver.observe(doc.documentElement, { childList: true });
 }
+
+globalThis.TabFlowLib = globalThis.TabFlowLib || {};
+globalThis.TabFlowLib.waitForHead = waitForHead;

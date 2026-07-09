@@ -42,6 +42,10 @@ describe('manifest.json permissions', () => {
     });
   });
 
+  test('does not declare any web accessible resources', () => {
+    expect(manifest.web_accessible_resources ?? []).toHaveLength(0);
+  });
+
   test('permission patterns never cover internal browser schemes', () => {
     const allPatterns = [
       ...manifest.host_permissions,
