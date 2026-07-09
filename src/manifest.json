@@ -4,6 +4,9 @@
   "version": "2.0.1",
   "description": "Visualize your browsing context.",
   "permissions": ["tabs", "storage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "background/background.js",
