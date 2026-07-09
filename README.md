@@ -284,26 +284,15 @@ This project demonstrates that AI can be **trusted and effective** for building 
 
 ---
 
-## 🚀 Development Roadmap
+## 🚀 Current Status
 
-### v2.0.1 (Current)
+### v2.0.1
 
 - ✅ Numeric badges (1, 2, 3+)
 - ✅ MutationObserver for SPA favicon updates
 - ✅ Configurable history depth
 - ✅ Modern settings UI with live preview
 - ✅ Full test coverage (71/71 tests passing)
-
-### Future Ideas
-
-- [ ] **Custom Colors:** User-defined badge color schemes
-- [ ] **Persistent History:** Store tab history across browser sessions
-- [ ] **Keyboard Shortcuts:** Quick navigation (Ctrl+Shift+← to go to previous tab)
-- [ ] **Visual Themes:** Dark/light mode badge variants
-- [ ] **Export/Import Settings:** Backup configuration across devices
-- [ ] **Chrome Web Store:** Official distribution channel
-- [ ] Cross-device sync (if possible)
-- [ ] Performance metrics dashboard
 
 ### Known Limitations
 
