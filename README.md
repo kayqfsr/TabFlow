@@ -237,6 +237,7 @@ TabFlow/
   - `scripting` — Inject content script to manipulate favicons
   - `http://*/*`, `https://*/*` — Favicon access on regular web pages only (internal browser pages such as `chrome://` are never touched)
 - **Source code public:** Full transparency; anyone can audit the code
+- **Minimal favicon disclosure:** the badge drawn into a page's favicon is derived by a single pure function (`getBadgeConfig`, see `src/lib/badgeConfig.js`) that only ever encodes the tab's own recency rank (a single digit) — never a tab title, URL, or any other tab's identifier. This is enforced by unit tests, since any page can read its own favicon `href` via the DOM.
 
 ---
 

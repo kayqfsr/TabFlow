@@ -18,7 +18,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["lib/headObserver.js"],
+      "resources": ["lib/headObserver.js", "lib/badgeConfig.js"],
       "matches": ["http://*/*", "https://*/*"]
     }
   ],
