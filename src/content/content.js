@@ -1,4 +1,4 @@
-// content.js - Script de conteúdo
+// content.js - Content script
 
 let originalFavicon = null;
 let canvas = document.createElement('canvas');
@@ -12,7 +12,7 @@ globalThis.TabFlowLib.waitForHead(document, initFaviconObserver);
 requestCurrentPosition();
 
 function requestCurrentPosition() {
-  chrome.runtime.sendMessage({ action: 'getPosition' }, function(response) {
+  chrome.runtime.sendMessage({ action: 'getPosition' }, function (response) {
     if (chrome.runtime.lastError) return;
     if (response && typeof response.position === 'number') {
       currentPosition = response.position;
@@ -22,27 +22,27 @@ function requestCurrentPosition() {
 }
 
 function initFaviconObserver(head) {
-  faviconObserver = new MutationObserver(function(mutations) {
+  faviconObserver = new MutationObserver(function (mutations) {
     let shouldReapply = false;
 
-    mutations.forEach(function(mutation) {
-      // Verifica mudanças de atributos (href)
+    mutations.forEach(function (mutation) {
+      // Check for attribute changes (href)
       if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
         const target = mutation.target;
-        if (target.tagName === 'LINK' && (target.rel.includes('icon'))) {
-          // Ignora mutações causadas pelo próprio badge para não entrar em loop de redesenho
+        if (target.tagName === 'LINK' && target.rel.includes('icon')) {
+          // Ignore mutations caused by our own badge to avoid a redraw loop
           if (target.href.startsWith('data:image/png')) return;
-          
-          originalFavicon = target.href; // Atualiza o original se o site mudou
+
+          originalFavicon = target.href; // Update the original if the site changed it
           shouldReapply = true;
         }
       }
-      // Verifica adição de novos favicons pelo site
+      // Check for new favicons added by the site
       else if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach(function(node) {
-          if (node.tagName === 'LINK' && (node.rel.includes('icon'))) {
-             if (node.href.startsWith('data:image/png')) return; // Ignora o nosso
-             shouldReapply = true;
+        mutation.addedNodes.forEach(function (node) {
+          if (node.tagName === 'LINK' && node.rel.includes('icon')) {
+            if (node.href.startsWith('data:image/png')) return; // Ignore our own
+            shouldReapply = true;
           }
         });
       }
@@ -57,11 +57,11 @@ function initFaviconObserver(head) {
     childList: true,
     subtree: true,
     attributes: true,
-    attributeFilter: ['href']
+    attributeFilter: ['href'],
   });
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request) {
   if (request.action === 'updateHistory') {
     currentPosition = request.position;
     applyFaviconWithBadge();
@@ -69,7 +69,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 function applyFaviconWithBadge() {
-  // Se estiver fora do histórico (-1), restaura
+  // If outside history (-1), restore
   if (currentPosition === -1) {
     restoreOriginalFavicon();
     return;
@@ -85,42 +85,42 @@ function manipulateFaviconWithBadge(position) {
 
   let faviconLink = document.querySelector('link[rel*="icon"]');
 
-  // Cria se não existir
+  // Create it if it doesn't exist
   if (!faviconLink) {
     faviconLink = document.createElement('link');
     faviconLink.rel = 'icon';
     document.head.appendChild(faviconLink);
   }
 
-  // Salva o original apenas se não for o nosso badge
+  // Only save the original if it isn't our own badge
   if (!originalFavicon && !faviconLink.href.startsWith('data:')) {
     originalFavicon = faviconLink.href;
   }
 
-  // Desenho do Badge
-  canvas.width = 32; // Melhor resolução
+  // Draw the badge
+  canvas.width = 32; // Higher resolution
   canvas.height = 32;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Fundo Quadrado Arredondado
+  // Rounded square background
   ctx.fillStyle = badge.backgroundColor;
   ctx.beginPath();
-  // roundRect é moderno, fallback para rect simples se der erro
+  // roundRect is modern; fall back to a plain rect if unsupported
   if (ctx.roundRect) {
-      ctx.roundRect(0, 0, canvas.width, canvas.height, 8);
+    ctx.roundRect(0, 0, canvas.width, canvas.height, 8);
   } else {
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
   ctx.fill();
 
-  // Número
+  // Number
   ctx.fillStyle = badge.textColor;
   ctx.font = 'bold 20px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(badge.label, canvas.width / 2, canvas.height / 2 + 2);
 
-  // Aplica sem disparar loop (graças ao check lá em cima)
+  // Apply without triggering a loop (thanks to the check above)
   faviconLink.href = canvas.toDataURL('image/png');
 }
 

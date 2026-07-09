@@ -3,9 +3,12 @@ const { createOnceInitializer } = require('../src/lib/onceInit.cjs');
 describe('createOnceInitializer', () => {
   test('invokes the wrapped function only once across concurrent callers', async () => {
     let resolveInit;
-    const initFn = jest.fn(() => new Promise((resolve) => {
-      resolveInit = resolve;
-    }));
+    const initFn = jest.fn(
+      () =>
+        new Promise((resolve) => {
+          resolveInit = resolve;
+        })
+    );
     const ensureInitialized = createOnceInitializer(initFn);
 
     const first = ensureInitialized();

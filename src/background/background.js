@@ -9,15 +9,15 @@ import { createOnceInitializer } from '../lib/onceInit.js';
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
 
-// IDs das abas notificadas no último broadcast, para saber quais precisam
-// ser limpas (position -1) quando saem do histórico rastreado
+// Tab IDs notified in the last broadcast, so we know which ones need to
+// be cleared (position -1) when they leave the tracked history
 let lastBroadcastTabIds = [];
 
-// Garante que o histórico só é carregado uma vez, mesmo se onActivated
-// disparar antes da inicialização terminar
+// Ensures history is only loaded once, even if onActivated fires before
+// initialization finishes
 const ensureHistoryLoaded = createOnceInitializer(loadHistoryFromStorage);
 
-// Inicialização: carrega histórico salvo e configurações
+// Initialization: load saved history and settings
 (async function init() {
   await ensureHistoryLoaded();
   await loadSettings();
@@ -34,19 +34,21 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 /**
- * Carrega o histórico salvo do chrome.storage.session
+ * Loads the saved history from chrome.storage.session
  */
 async function loadHistoryFromStorage() {
   if (!isSessionStorageAvailable(chrome.storage)) {
-    console.warn('[TabFlow] chrome.storage.session indisponível; histórico não será persistido entre reinícios do service worker.');
+    console.warn(
+      '[TabFlow] chrome.storage.session unavailable; history will not persist across service worker restarts.'
+    );
     return;
   }
 
   return new Promise((resolve) => {
-    chrome.storage.session.get([STORAGE_KEY], function(result) {
+    chrome.storage.session.get([STORAGE_KEY], function (result) {
       if (result[STORAGE_KEY]) {
         historyManager.hydrate(result[STORAGE_KEY]);
-        console.log('[TabFlow] Histórico restaurado:', result[STORAGE_KEY]);
+        console.log('[TabFlow] History restored:', result[STORAGE_KEY]);
       }
       resolve();
     });
@@ -54,22 +56,22 @@ async function loadHistoryFromStorage() {
 }
 
 /**
- * Salva o histórico atual no chrome.storage.session
+ * Saves the current history to chrome.storage.session
  */
 function saveHistoryToStorage() {
   if (!isSessionStorageAvailable(chrome.storage)) return;
 
   const history = historyManager.getHistory();
-  chrome.storage.session.set({ [STORAGE_KEY]: history }, function() {
+  chrome.storage.session.set({ [STORAGE_KEY]: history }, function () {
     if (chrome.runtime.lastError) {
-      console.error('[TabFlow] Erro ao salvar histórico:', chrome.runtime.lastError);
+      console.error('[TabFlow] Error saving history:', chrome.runtime.lastError);
     }
   });
 }
 
 async function loadSettings() {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['maxHistorySize'], function(result) {
+    chrome.storage.sync.get(['maxHistorySize'], function (result) {
       const size = result.maxHistorySize || 5;
       historyManager.setMaxSize(size);
       resolve();
@@ -77,12 +79,12 @@ async function loadSettings() {
   });
 }
 
-chrome.tabs.onActivated.addListener(async function(activeInfo) {
-  // Aguarda histórico ser carregado antes de processar
+chrome.tabs.onActivated.addListener(async function (activeInfo) {
+  // Wait for history to load before processing
   await ensureHistoryLoaded();
 
   historyManager.activateTab(activeInfo.tabId);
-  saveHistoryToStorage(); // Persiste o novo estado
+  saveHistoryToStorage(); // Persist the new state
   broadcastHistory();
 });
 
@@ -90,22 +92,24 @@ function broadcastHistory() {
   const currentTabIds = historyManager.getHistory();
   const targetTabIds = getBroadcastTargetTabIds(lastBroadcastTabIds, currentTabIds);
 
-  targetTabIds.forEach(function(tabId) {
+  targetTabIds.forEach(function (tabId) {
     const position = historyManager.getPosition(tabId);
-    chrome.tabs.sendMessage(tabId, {
-      action: 'updateHistory',
-      position: position
-    }).catch((error) => {
-      if (!isExpectedSendMessageError(error)) {
-        console.error('[TabFlow] Erro ao notificar aba', tabId, error);
-      }
-    });
+    chrome.tabs
+      .sendMessage(tabId, {
+        action: 'updateHistory',
+        position: position,
+      })
+      .catch((error) => {
+        if (!isExpectedSendMessageError(error)) {
+          console.error('[TabFlow] Error notifying tab', tabId, error);
+        }
+      });
   });
 
   lastBroadcastTabIds = currentTabIds;
 }
 
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (!isTrustedSender(sender, chrome.runtime.id)) {
     return;
   }
@@ -122,17 +126,17 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
     historyManager.setMaxSize(request.maxHistorySize);
     chrome.storage.sync.set({ maxHistorySize: request.maxHistorySize });
-    saveHistoryToStorage(); // Salva histórico ajustado ao novo tamanho
+    saveHistoryToStorage(); // Save history trimmed to the new size
     broadcastHistory();
   }
 });
 
-// Limpa histórico quando abas são fechadas (opcional, mas recomendado)
-chrome.tabs.onRemoved.addListener(function(tabId) {
+// Clear history when tabs are closed (optional, but recommended)
+chrome.tabs.onRemoved.addListener(function (tabId) {
   const history = historyManager.getHistory();
   if (history.includes(tabId)) {
-    // Remove a aba fechada do histórico
-    historyManager.hydrate(history.filter(id => id !== tabId));
+    // Remove the closed tab from history
+    historyManager.hydrate(history.filter((id) => id !== tabId));
     saveHistoryToStorage();
     broadcastHistory();
   }

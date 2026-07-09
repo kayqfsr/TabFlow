@@ -1,119 +1,113 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TabFlow - Configurações</title>
-  <link rel="stylesheet" href="options.css">
-</head>
-<body>
-  <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <div class="logo">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
-        </svg>
-        <div class="logo-text">
-          <h1>TabFlow</h1>
-          <p class="subtitle">Configurações de rastreamento de abas</p>
-        </div>
-      </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="content">
-      <!-- History Size Section -->
-      <section class="setting-section">
-        <div class="setting-header">
-          <h2>Tamanho do histórico</h2>
-          <span class="badge" id="currentValue">5</span>
-        </div>
-        <p class="description">
-          Quantidade de abas recentes rastreadas com badges numerados.
-        </p>
-
-        <div class="input-group">
-          <label for="maxHistorySize" class="input-label">
-            <span>Número de abas</span>
-            <span class="range-value" id="rangeValue">5</span>
-          </label>
-          <input
-            type="range"
-            id="maxHistorySize"
-            min="3"
-            max="10"
-            value="5"
-            class="slider"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TabFlow - Configurações</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <svg
+            class="logo-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
           >
-          <div class="range-labels">
-            <span>3</span>
-            <span>10</span>
-          </div>
-        </div>
-
-        <!-- Preview -->
-        <div class="preview-section">
-          <h3>Visualização</h3>
-          <div class="badge-preview" id="badgePreview">
-            <!-- Badges serão inseridos via JS -->
-          </div>
-        </div>
-      </section>
-
-      <!-- Badge Color Section -->
-      <section class="setting-section">
-        <div class="setting-header">
-          <h2>Cores dos badges</h2>
-        </div>
-        <div class="color-info">
-          <div class="color-item">
-            <span class="color-dot" style="background: #FF4444;"></span>
-            <span class="color-label">Posição 1 (mais recente)</span>
-          </div>
-          <div class="color-item">
-            <span class="color-dot" style="background: #FF8800;"></span>
-            <span class="color-label">Posição 2</span>
-          </div>
-          <div class="color-item">
-            <span class="color-dot" style="background: #FFFF00;"></span>
-            <span class="color-label">Posição 3+</span>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="status-messages">
-        <div class="success-message" id="successMessage">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-            <polyline points="22 4 12 14.01 9 11.01"/>
+            <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z" />
           </svg>
-          <span>Configurações salvas com sucesso.</span>
+          <div class="logo-text">
+            <h1>TabFlow</h1>
+            <p class="subtitle">Configurações de rastreamento de abas</p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="content">
+        <!-- History Size Section -->
+        <section class="setting-section">
+          <div class="setting-header">
+            <h2>Tamanho do histórico</h2>
+            <span class="badge" id="currentValue">5</span>
+          </div>
+          <p class="description">Quantidade de abas recentes rastreadas com badges numerados.</p>
+
+          <div class="input-group">
+            <label for="maxHistorySize" class="input-label">
+              <span>Número de abas</span>
+              <span class="range-value" id="rangeValue">5</span>
+            </label>
+            <input type="range" id="maxHistorySize" min="3" max="10" value="5" class="slider" />
+            <div class="range-labels">
+              <span>3</span>
+              <span>10</span>
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="preview-section">
+            <h3>Visualização</h3>
+            <div class="badge-preview" id="badgePreview">
+              <!-- Badges serão inseridos via JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Badge Color Section -->
+        <section class="setting-section">
+          <div class="setting-header">
+            <h2>Cores dos badges</h2>
+          </div>
+          <div class="color-info">
+            <div class="color-item">
+              <span class="color-dot" style="background: #ff4444"></span>
+              <span class="color-label">Posição 1 (mais recente)</span>
+            </div>
+            <div class="color-item">
+              <span class="color-dot" style="background: #ff8800"></span>
+              <span class="color-label">Posição 2</span>
+            </div>
+            <div class="color-item">
+              <span class="color-dot" style="background: #ffff00"></span>
+              <span class="color-label">Posição 3+</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="status-messages">
+          <div class="success-message" id="successMessage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span>Configurações salvas com sucesso.</span>
+          </div>
+
+          <div class="error-message" id="errorMessage">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span id="errorMessageText"></span>
+          </div>
         </div>
 
-        <div class="error-message" id="errorMessage">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <span id="errorMessageText"></span>
+        <div class="footer-row">
+          <span class="version">v2.0.1</span>
+          <button id="saveButton" class="btn-primary">Salvar configurações</button>
         </div>
-      </div>
+      </footer>
+    </div>
 
-      <div class="footer-row">
-        <span class="version">v2.0.1</span>
-        <button id="saveButton" class="btn-primary">
-          Salvar configurações
-        </button>
-      </div>
-    </footer>
-  </div>
-
-  <script type="module" src="options.js"></script>
-</body>
+    <script type="module" src="options.js"></script>
+  </body>
 </html>

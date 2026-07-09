@@ -1,8 +1,8 @@
 // onceInit.js
 /**
- * Envolve uma função assíncrona de inicialização para que, não importa
- * quantas vezes seja chamada (mesmo concorrentemente), o trabalho real
- * só aconteça uma vez. Chamadas subsequentes reutilizam a mesma Promise.
+ * Wraps an async initialization function so that, no matter how many
+ * times it's called (even concurrently), the actual work only happens
+ * once. Subsequent calls reuse the same Promise.
  * @param {() => Promise<any>} initFn
  * @returns {() => Promise<any>}
  */

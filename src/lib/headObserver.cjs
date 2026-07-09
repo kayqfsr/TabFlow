@@ -13,7 +13,7 @@ function waitForHead(doc, callback) {
     return;
   }
 
-  const rootObserver = new MutationObserver(function() {
+  const rootObserver = new MutationObserver(function () {
     if (doc.head) {
       rootObserver.disconnect();
       callback(doc.head);

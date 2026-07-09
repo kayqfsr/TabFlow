@@ -72,7 +72,7 @@ describe('TabHistoryManager', () => {
     manager.activateTab(1);
     manager.hydrate(null);
     expect(manager.getHistory()).toEqual([1]); // Não muda se input inválido
-    
+
     manager.hydrate('invalid');
     expect(manager.getHistory()).toEqual([1]); // Não muda se input inválido
   });

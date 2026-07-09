@@ -1,10 +1,10 @@
-// options.js - Script para a página de opções
-// Carrega e salva as configurações do usuário com interface moderna
+// options.js - Options page script
+// Loads and saves user settings for the modern UI
 
 import { getSaveValidationError } from '../lib/optionsValidation.js';
 import { BADGE_COLORS } from '../lib/badgeColors.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const maxHistorySizeInput = document.getElementById('maxHistorySize');
   const rangeValue = document.getElementById('rangeValue');
   const currentValue = document.getElementById('currentValue');
@@ -14,22 +14,22 @@ document.addEventListener('DOMContentLoaded', function() {
   const errorMessageText = document.getElementById('errorMessageText');
   const badgePreview = document.getElementById('badgePreview');
 
-  // Carrega as configurações atuais
+  // Load current settings
   loadSettings();
 
-  // Atualiza preview quando o slider muda
-  maxHistorySizeInput.addEventListener('input', function() {
+  // Update preview when the slider changes
+  maxHistorySizeInput.addEventListener('input', function () {
     const value = parseInt(this.value);
     rangeValue.textContent = value;
     updateBadgePreview(value);
   });
 
-  // Salva as configurações ao clicar no botão
+  // Save settings when the button is clicked
   saveButton.addEventListener('click', saveSettings);
 
-  // Funções auxiliares
+  // Helper functions
   function loadSettings() {
-    chrome.storage.sync.get(['maxHistorySize'], function(result) {
+    chrome.storage.sync.get(['maxHistorySize'], function (result) {
       const size = result.maxHistorySize || 5;
       maxHistorySizeInput.value = size;
       rangeValue.textContent = size;
@@ -47,30 +47,30 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    chrome.storage.sync.set({ maxHistorySize: maxHistorySize }, function() {
-      // Notifica o background script para atualizar
+    chrome.storage.sync.set({ maxHistorySize: maxHistorySize }, function () {
+      // Notify the background script to update
       chrome.runtime.sendMessage({
         action: 'updateSettings',
-        maxHistorySize: maxHistorySize
+        maxHistorySize: maxHistorySize,
       });
 
-      // Atualiza badge do header
+      // Update the header badge
       currentValue.textContent = maxHistorySize;
 
-      // Mostra mensagem de sucesso
+      // Show success message
       showSuccess();
     });
   }
 
   function updateBadgePreview(count) {
     badgePreview.innerHTML = '';
-    
+
     for (let i = 0; i < count; i++) {
       const badge = document.createElement('div');
       badge.className = 'preview-badge';
       badge.textContent = i + 1;
-      
-      // Define cor baseada na posição
+
+      // Set color based on position
       if (i === 0) {
         badge.style.backgroundColor = BADGE_COLORS[0];
       } else if (i === 1) {
@@ -78,14 +78,14 @@ document.addEventListener('DOMContentLoaded', function() {
       } else {
         badge.style.backgroundColor = BADGE_COLORS[2];
       }
-      
+
       badgePreview.appendChild(badge);
     }
   }
 
   function showSuccess() {
     successMessage.classList.add('show');
-    
+
     setTimeout(() => {
       successMessage.classList.remove('show');
     }, 3000);

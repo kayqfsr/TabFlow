@@ -4,7 +4,7 @@ Thank you for your interest in contributing to TabFlow! This document provides g
 
 ## 📋 Code of Conduct
 
-This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to kayque@example.com.
+This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior by opening a [GitHub issue](https://github.com/kayqfsr/TabFlow/issues).
 
 ---
 
@@ -12,9 +12,10 @@ This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participat
 
 ### Reporting Bugs
 
-**Before reporting:** Check [existing issues](https://github.com/yourusername/TabFlow/issues) to avoid duplicates.
+**Before reporting:** Check [existing issues](https://github.com/kayqfsr/TabFlow/issues) to avoid duplicates.
 
 **When reporting, include:**
+
 - Clear, descriptive title
 - Steps to reproduce the bug
 - Expected behavior vs. actual behavior
@@ -23,6 +24,7 @@ This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participat
 - Console errors (if any)
 
 **Example:**
+
 ```
 Title: Badge not appearing on Gmail favicons after refresh
 Steps:
@@ -40,6 +42,7 @@ Chrome: 131.0.6778.69 (Windows 11)
 ### Suggesting Enhancements
 
 Open an issue with label `enhancement` and include:
+
 - **Use case:** Why is this feature needed?
 - **Proposed solution:** How would you implement it?
 - **Alternative approaches:** What other solutions exist?
@@ -47,6 +50,7 @@ Open an issue with label `enhancement` and include:
 ### Development Setup
 
 #### Prerequisites
+
 - Node.js 18+ (verify with `node --version`)
 - npm 8+ (verify with `npm --version`)
 - Git
@@ -55,7 +59,7 @@ Open an issue with label `enhancement` and include:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/TabFlow.git
+git clone https://github.com/kayqfsr/TabFlow.git
 cd TabFlow
 
 # Install dependencies
@@ -76,7 +80,9 @@ npm test
 #### Hot Reload During Development
 
 After making changes:
+
 1. **For `src/lib/` changes:** Run tests to validate logic changes
+
    ```bash
    npm test -- --watch
    ```
@@ -97,6 +103,7 @@ git checkout -b feature/my-feature-name
 ```
 
 Use descriptive branch names:
+
 - `feature/dark-mode` ✅ Good
 - `fix/favicon-mutation-race-condition` ✅ Good
 - `my-changes` ❌ Vague
@@ -105,17 +112,20 @@ Use descriptive branch names:
 ### 2. Code Style Guidelines
 
 #### JavaScript/ES6 Standards
+
 - Use **ES6+ syntax** (arrow functions, destructuring, const/let, etc.)
 - Use **camelCase** for variables and functions
 - Use **PascalCase** for classes
 - Use **UPPERCASE_SNAKE_CASE** for constants
 
 #### Comments & Documentation
+
 - Write **JSDoc** comments for exported functions and classes
 - Document non-obvious logic with inline comments
 - Avoid over-commenting obvious code
 
 **Example:**
+
 ```javascript
 /**
  * Applies a favicon badge to indicate tab position in history
@@ -134,15 +144,28 @@ export async function applyFaviconBadge(tabId, position) {
 ```
 
 #### File Organization
+
 - One class/export per file (when reasonable)
 - Group related functionality together
 - Keep files under 300 lines (refactor if larger)
+
+#### Linting & Formatting
+
+Before committing, make sure your changes pass both checks (CI enforces them too):
+
+```bash
+npm run lint          # ESLint
+npm run format:check  # Prettier
+```
+
+Auto-fix most issues with `npm run lint:fix` and `npm run format`.
 
 ### 3. Write Tests
 
 **All business logic changes require tests.**
 
 #### For `src/lib/historyLogic.js` changes
+
 - Add tests to `tests/historyLogic.test.js`
 - Tests should cover:
   - Happy path (normal operation)
@@ -150,15 +173,16 @@ export async function applyFaviconBadge(tabId, position) {
   - Boundary conditions
 
 **Example test:**
+
 ```javascript
 test('should handle large history gracefully', () => {
   const manager = new TabHistoryManager(5);
-  
+
   // Add 100 tabs
   for (let i = 1; i <= 100; i++) {
     manager.activateTab(i);
   }
-  
+
   // Should only keep last 5
   expect(manager.getHistory().length).toBe(5);
   expect(manager.getHistory()[0]).toBe(100);
@@ -166,6 +190,7 @@ test('should handle large history gracefully', () => {
 ```
 
 #### Running Tests
+
 ```bash
 # Run all tests once
 npm test
@@ -204,6 +229,7 @@ git commit -m "chore: update Jest to 29.5"
 ```
 
 **Commit message format:**
+
 ```
 <type>(<scope>): <subject>
 
@@ -213,6 +239,7 @@ git commit -m "chore: update Jest to 29.5"
 ```
 
 **Example:**
+
 ```
 feat(favicon): add support for custom badge colors
 
@@ -233,32 +260,14 @@ git push origin feature/my-feature-name
 ```
 
 **In the PR description:**
+
 - Reference related issues: `Closes #123`
 - Describe what changed and why
 - Include screenshots for UI changes
 - List testing done
 
-**PR Template:**
-```markdown
-## Description
-What does this PR do?
-
-## Related Issues
-Closes #123
-
-## Testing
-- [ ] Unit tests added/updated
-- [ ] Manual testing completed
-- [ ] No regressions observed
-
-## Screenshots (if applicable)
-Before/After screenshots
-
-## Checklist
-- [ ] Code follows style guidelines
-- [ ] Tests pass locally (`npm test`)
-- [ ] Commits follow conventional format
-```
+Opening a PR on GitHub automatically pre-fills the description from
+[`.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md) — just fill it in.
 
 ---
 
@@ -297,7 +306,7 @@ Before/After screenshots
    - Runs on every page
    - Manipulates favicons
    - Watches for favicon mutations
-   - Depends on `src/lib/badgeConfig.js` and `src/lib/headObserver.js`, which the manifest injects as classic scripts *before* `content.js` (see `content_scripts.js` order) and expose their functions on `globalThis.TabFlowLib`. This keeps the two helper files out of `web_accessible_resources`, since nothing outside the extension's own content script needs to reach them.
+   - Depends on `src/lib/badgeConfig.js` and `src/lib/headObserver.js`, which the manifest injects as classic scripts _before_ `content.js` (see `content_scripts.js` order) and expose their functions on `globalThis.TabFlowLib`. This keeps the two helper files out of `web_accessible_resources`, since nothing outside the extension's own content script needs to reach them.
 
 4. **`src/options/`** — Settings UI
    - Modern gradient design
@@ -307,11 +316,13 @@ Before/After screenshots
 ### Key Concepts
 
 **State Management:**
+
 - History is an array of tab IDs ordered by recency
 - Max size limits how many tabs are tracked
 - State persists to `chrome.storage.session`
 
 **Favicon Manipulation:**
+
 - Create 16×16 canvas
 - Draw colored background (red/orange/yellow)
 - Draw white number
@@ -319,6 +330,7 @@ Before/After screenshots
 - Replace favicon `<link>` href
 
 **The "Favicon War":**
+
 - SPAs update favicons for notifications
 - MutationObserver detects changes
 - We recapture and redraw our badge on top
@@ -329,15 +341,16 @@ Before/After screenshots
 
 ### Permission Scope
 
-TabFlow requests `host_permissions` and `content_scripts.matches` for all `http(s)://*/*` origins. This is broader than `activeTab` on purpose: the badge must render on tabs that are *not* currently active (any tab present in the tracked history gets its favicon updated on every activation event), and the content script needs to run at `document_start` on page load without waiting for user interaction. `activeTab` only grants access after an explicit user gesture on the active tab, which is incompatible with these requirements. Only permissions the code actually calls (`tabs`, `storage`) are declared — do not add `scripting` or other capabilities unless a change genuinely requires them.
+TabFlow requests `host_permissions` and `content_scripts.matches` for all `http(s)://*/*` origins. This is broader than `activeTab` on purpose: the badge must render on tabs that are _not_ currently active (any tab present in the tracked history gets its favicon updated on every activation event), and the content script needs to run at `document_start` on page load without waiting for user interaction. `activeTab` only grants access after an explicit user gesture on the active tab, which is incompatible with these requirements. Only permissions the code actually calls (`tabs`, `storage`) are declared — do not add `scripting` or other capabilities unless a change genuinely requires them.
 
 ### Accepted Risk: Favicon Position Side-Channel
 
-Any page can read its own `<link rel="icon">` element and observe the badge TabFlow draws on it. Since the badge encodes the tab's 1-based position in the tracked history (1 through `maxHistorySize`, at most 10), a malicious page can infer *that number* — e.g. "this tab is currently rank 2 in the user's recent-tab history."
+Any page can read its own `<link rel="icon">` element and observe the badge TabFlow draws on it. Since the badge encodes the tab's 1-based position in the tracked history (1 through `maxHistorySize`, at most 10), a malicious page can infer _that number_ — e.g. "this tab is currently rank 2 in the user's recent-tab history."
 
 This is an accepted, intentional trade-off of the favicon-badge design, not a bug:
+
 - `getBadgeConfig(position)` (`src/lib/badgeConfig.js`) takes only the numeric position as input and returns only `backgroundColor`, `textColor`, and `label` — it has no access to, and therefore cannot leak, the tab's URL, title, or any other tab's data. `tests/badgeConfig.test.js` asserts this shape as a regression guard.
-- No mitigation removes the position leak entirely without dropping the favicon-badge feature itself, since the badge's visual purpose *is* to expose the position to the user glancing at their tab strip.
+- No mitigation removes the position leak entirely without dropping the favicon-badge feature itself, since the badge's visual purpose _is_ to expose the position to the user glancing at their tab strip.
 
 If this residual leak becomes unacceptable for a future use case, the alternative is to move the position indicator out of the favicon (e.g. into the extension's toolbar badge via `chrome.action.setBadgeText`, which pages cannot observe) instead of drawing it into the page-visible favicon.
 
@@ -348,12 +361,14 @@ Every file in `src/lib/` has a `.cjs` twin (e.g. `badgeColors.js` / `badgeColors
 ## 🎯 Priority Areas for Contribution
 
 **Good for first-time contributors:**
+
 - Documentation improvements
 - Bug fixes in non-core logic
 - Test coverage improvements
 - UI/UX refinements
 
 **More complex (reach out first):**
+
 - Architecture changes
 - Core algorithm modifications
 - Performance optimizations
@@ -363,13 +378,11 @@ Every file in `src/lib/` has a `.cjs` twin (e.g. `badgeColors.js` / `badgeColors
 
 ## 📞 Questions?
 
-- Open a [GitHub Discussion](https://github.com/yourusername/TabFlow/discussions)
+- Open a [GitHub Discussion](https://github.com/kayqfsr/TabFlow/discussions)
 - Check existing issues and documentation
-- Email: kayque@example.com
 
 ---
 
 **Thank you for contributing to TabFlow! 🚀**
 
 Together, we build better tools for better productivity.
-

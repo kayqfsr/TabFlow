@@ -2,6 +2,7 @@
 
 > **A Chrome extension that visualizes your browsing context via intelligent favicon manipulation.**
 
+[![CI](https://github.com/kayqfsr/TabFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/kayqfsr/TabFlow/actions/workflows/ci.yml)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Version](https://img.shields.io/badge/Version-2.0.1-blue.svg)
 ![Chrome Extension Manifest V3](https://img.shields.io/badge/Manifest-V3-success.svg)
@@ -33,16 +34,17 @@ Modern web work involves juggling 10+ tabs simultaneously. Your browser doesn't 
 
 TabFlow injects **numeric position badges** directly into tab favicons, creating an instant visual memory anchor:
 
-| Position | Badge | Meaning |
-|----------|-------|---------|
-| 1 | 🔴 **1** | Most recently visited |
-| 2 | 🟠 **2** | Second most recent |
-| 3+ | 🟡 **3+** | Third+ in history |
-| Outside history | — | Original favicon |
+| Position        | Badge     | Meaning               |
+| --------------- | --------- | --------------------- |
+| 1               | 🔴 **1**  | Most recently visited |
+| 2               | 🟠 **2**  | Second most recent    |
+| 3+              | 🟡 **3+** | Third+ in history     |
+| Outside history | —         | Original favicon      |
 
 **Example:** Instead of searching 15 tabs, your brain instantly recalls "I need the red '1' tab"—dramatically faster than reading titles.
 
 ### Key Features
+
 - ✅ Works on every website (no DOM injection needed)
 - ✅ Real-time updates with MutationObserver
 - ✅ Survives favicon updates from Single Page Applications (Gmail, Discord, etc.)
@@ -87,6 +89,7 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 ### Core Components
 
 #### 1. `src/lib/historyLogic.js` (Pure Business Logic)
+
 - **Purpose:** Manage tab history state independently from Chrome API
 - **Advantage:** Testable in Jest without mocking
 - **Methods:**
@@ -98,12 +101,14 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 **Why this matters:** Business logic is decoupled from infrastructure, making it reusable and maintainable.
 
 #### 2. `src/background/background.js` (Service Worker)
+
 - Listens to `chrome.tabs.onActivated`
 - Calls `historyManager.activateTab()`
 - Persists to `chrome.storage.session`
 - Broadcasts changes to content scripts
 
 #### 3. `src/content/content.js` (Tab Favicon Manipulation)
+
 - Receives position from Service Worker
 - Creates 16×16 canvas with colored background + white number
 - Converts to PNG data URL
@@ -111,6 +116,7 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 - **Watches** for favicon mutations (SPA updates) and reapplies badge
 
 #### 4. `src/options/` (Settings UI)
+
 - Modern gradient UI with animated slider
 - Live badge preview
 - Persistent user configuration
@@ -118,11 +124,13 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 ### Resiliency: The "Favicon War"
 
 **Problem:** Single Page Applications (Gmail, Discord, Slack, YouTube) update favicons to show notification badges. A naive approach would:
+
 1. Draw favicon once → site updates its favicon → our badge disappears ❌
 
 **Solution:** MutationObserver watches `<link rel="icon">` and reapplies badges intelligently.
 
 **Why this works:**
+
 - Detects when sites update favicons
 - Recaptures + redraws without infinite loops
 - Handles concurrent updates gracefully
@@ -137,12 +145,15 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 npm test
 ```
 
-**Test Results (9/9 Passing):**
+**Test Results (72/72 Passing across 13 suites):**
+
 - ✅ History ordering and sorting
 - ✅ Max size enforcement and trimming
 - ✅ Position calculation accuracy
 - ✅ State hydration and recovery
 - ✅ Invalid input handling
+- ✅ Manifest permission scope (no unused/over-broad permissions)
+- ✅ `.js`/`.cjs` module parity (guards against silent drift)
 
 **Why TDD Matters:** Every feature was designed with tests first, ensuring reliability and making refactoring safe. This is a hallmark of professional software engineering.
 
@@ -153,8 +164,9 @@ npm test
 ### For End Users
 
 1. **Clone or download:**
+
    ```bash
-   git clone https://github.com/yourusername/TabFlow.git
+   git clone https://github.com/kayqfsr/TabFlow.git
    cd TabFlow
    ```
 
@@ -162,7 +174,7 @@ npm test
    - Go to `chrome://extensions/`
    - Enable **Developer mode** (top-right toggle)
    - Click **Load unpacked**
-   - Select the `TabFlow_Dist` folder
+   - Select the `src` folder
 
 3. **Configure:**
    - Click the extension icon in your toolbar
@@ -184,8 +196,9 @@ npm test -- --watch
 # Coverage report
 npm run test:coverage
 
-# Build distribution package
-npm run build
+# Lint and format check
+npm run lint
+npm run format:check
 ```
 
 ---
@@ -195,8 +208,10 @@ npm run build
 ```
 TabFlow/
 ├── .github/
-│   └── workflows/
-│       └── ci.yml                  # GitHub Actions CI/CD pipeline
+│   ├── workflows/
+│   │   └── ci.yml                  # GitHub Actions CI pipeline (lint, format, tests)
+│   ├── ISSUE_TEMPLATE/             # Bug report & feature request templates
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── src/
 │   ├── background/
 │   │   └── background.js           # Service Worker (event handling)
@@ -205,6 +220,7 @@ TabFlow/
 │   ├── lib/
 │   │   ├── historyLogic.js         # Pure business logic (ES Modules)
 │   │   └── historyLogic.cjs        # CommonJS wrapper for tests
+│   │       (plus other .js/.cjs pairs — see CONTRIBUTING.md)
 │   ├── options/
 │   │   ├── options.html            # Settings UI
 │   │   ├── options.css             # Modern gradient design
@@ -214,11 +230,12 @@ TabFlow/
 │   │   ├── icon48.png
 │   │   └── icon128.png
 │   └── manifest.json               # Chrome Extension manifest (V3)
-├── TabFlow_Dist/                   # Distribution package
-├── tests/
-│   └── historyLogic.test.js        # Jest unit tests
-├── docs/                           # Additional documentation
+├── tests/                          # Jest unit tests (mirrors src/lib/)
+├── .editorconfig                   # Editor-agnostic formatting rules
 ├── .gitignore                      # Git exclusions
+├── .prettierrc.json / .prettierignore
+├── eslint.config.js                # ESLint flat config
+├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md                 # Contribution guidelines
 ├── LICENSE                         # MIT License
 ├── package.json                    # NPM dependencies & scripts
@@ -234,8 +251,7 @@ TabFlow/
 - **Transparent permissions:**
   - `tabs` — Read tab metadata and activation events
   - `storage` — Save/restore user history and settings
-  - `scripting` — Inject content script to manipulate favicons
-  - `http://*/*`, `https://*/*` — Favicon access on regular web pages only (internal browser pages such as `chrome://` are never touched)
+  - `http://*/*`, `https://*/*` — Favicon access on regular web pages only (internal browser pages such as `chrome://` are never touched). The content script is declared statically in `manifest.json`, so no runtime `scripting` permission is requested.
 - **Source code public:** Full transparency; anyone can audit the code
 - **Minimal favicon disclosure:** the badge drawn into a page's favicon is derived by a single pure function (`getBadgeConfig`, see `src/lib/badgeConfig.js`) that only ever encodes the tab's own recency rank (a single digit) — never a tab title, URL, or any other tab's identifier. This is enforced by unit tests, since any page can read its own favicon `href` via the DOM.
 
@@ -246,6 +262,7 @@ TabFlow/
 **This project was developed 100% with AI assistance** (Claude, GitHub Copilot, Cursor) following industry best practices:
 
 ### What AI Handled
+
 - ✅ Architecture design and refinement
 - ✅ Full implementation (all source files)
 - ✅ Test-Driven Development (TDD) workflow
@@ -254,7 +271,9 @@ TabFlow/
 - ✅ Deployment strategy
 
 ### Why This Matters
+
 This project demonstrates that AI can be **trusted and effective** for building production-ready software when:
+
 - Requirements are clear
 - Testing framework is in place
 - Code review and validation happen
@@ -268,18 +287,29 @@ This project demonstrates that AI can be **trusted and effective** for building 
 ## 🚀 Development Roadmap
 
 ### v2.0.1 (Current)
+
 - ✅ Numeric badges (1, 2, 3+)
 - ✅ MutationObserver for SPA favicon updates
 - ✅ Configurable history depth
 - ✅ Modern settings UI with live preview
-- ✅ Full test coverage (9/9 tests passing)
+- ✅ Full test coverage (72/72 tests passing)
 
 ### Future Ideas
-- [ ] Dark/light theme support
-- [ ] Custom badge colors
-- [ ] History export/import
+
+- [ ] **Custom Colors:** User-defined badge color schemes
+- [ ] **Persistent History:** Store tab history across browser sessions
+- [ ] **Keyboard Shortcuts:** Quick navigation (Ctrl+Shift+← to go to previous tab)
+- [ ] **Visual Themes:** Dark/light mode badge variants
+- [ ] **Export/Import Settings:** Backup configuration across devices
+- [ ] **Chrome Web Store:** Official distribution channel
 - [ ] Cross-device sync (if possible)
 - [ ] Performance metrics dashboard
+
+### Known Limitations
+
+- Favicon manipulation does not work on pages with strict Content Security Policy (CSP)
+- SPAs that use canvas-based favicons may have visual conflicts
+- Badge numbers limited to 1-10 for visual clarity (history size constraint)
 
 ---
 
@@ -288,6 +318,7 @@ This project demonstrates that AI can be **trusted and effective** for building 
 We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
 **Quick Start:**
+
 ```bash
 # 1. Fork and clone
 # 2. Create a feature branch
@@ -309,12 +340,11 @@ git push origin feature/my-feature
 
 TabFlow requests the following permissions—all necessary and minimal:
 
-| Permission | Why | Impact |
-|-----------|-----|--------|
+| Permission                        | Why                                 | Impact                                                     |
+| --------------------------------- | ----------------------------------- | ---------------------------------------------------------- |
 | `host_permissions: http(s)://*/*` | Favicon access on regular web pages | Required to inject badges; excludes internal browser pages |
-| `tabs` | Tab activation events | Know when user switches tabs |
-| `storage` | Save settings & history | Persist user preferences |
-| `scripting` | Inject content script | Modify favicons via canvas |
+| `tabs`                            | Tab activation events               | Know when user switches tabs                               |
+| `storage`                         | Save settings & history             | Persist user preferences                                   |
 
 **No personal data is collected or transmitted.**
 
@@ -331,27 +361,11 @@ See [LICENSE](./LICENSE) file for full details. You are free to use, modify, and
 ## 🙏 Acknowledgments
 
 This project was built with:
+
 - **[Chrome Extensions Manifest V3](https://developer.chrome.com/docs/extensions/mv3/)** — Secure extension framework
 - **[Jest](https://jestjs.io/)** — Testing framework
 - **[Claude AI / GitHub Copilot](https://github.com/features/copilot)** — AI assistance for development
 - **Node.js & vanilla JavaScript** — No heavy frameworks needed
-
----
-
-## Future Improvements
-
-### Planned Features
-- [ ] **Custom Colors:** User-defined badge color schemes
-- [ ] **Persistent History:** Store tab history across browser sessions
-- [ ] **Keyboard Shortcuts:** Quick navigation (Ctrl+Shift+← to go to previous tab)
-- [ ] **Visual Themes:** Dark mode badge variants
-- [ ] **Export/Import Settings:** Backup configuration across devices
-- [ ] **Chrome Web Store:** Official distribution channel
-
-### Known Limitations
-- Favicon manipulation does not work on pages with strict Content Security Policy (CSP)
-- SPAs that use canvas-based favicons may have visual conflicts
-- Badge numbers limited to 1-10 for visual clarity (history size constraint)
 
 ---
 
@@ -389,8 +403,8 @@ A: TabFlow is lightweight and visual-only. It doesn't restore sessions or manage
 ## Contact
 
 **Author:** Kayque Reis  
-**Repository:** [github.com/kayquereis/TabFlow](https://github.com/kayquereis/TabFlow)  
-**Issues:** [Report bugs or request features](https://github.com/kayquereis/TabFlow/issues)
+**Repository:** [github.com/kayqfsr/TabFlow](https://github.com/kayqfsr/TabFlow)  
+**Issues:** [Report bugs or request features](https://github.com/kayqfsr/TabFlow/issues)
 
 ---
 
@@ -401,10 +415,11 @@ A: TabFlow is lightweight and visual-only. It doesn't restore sessions or manage
 ## Author
 
 Built by **Kayque Reis** as a demonstration of production-grade browser extension development with:
+
 - ✅ Clean architecture (separation of concerns)
 - ✅ Comprehensive testing (Jest unit tests)
 - ✅ Modern UI/UX (gradient design, animations)
-- ✅ Professional documentation (README, CHANGELOG, CONTRIBUTING)
+- ✅ Professional documentation (README, CONTRIBUTING)
 - ✅ State persistence (chrome.storage.session)
 
 Perfect for portfolios showcasing Chrome Extension development skills.

@@ -1,4 +1,7 @@
-const { isExpectedSendMessageError, getBroadcastTargetTabIds } = require('../src/lib/tabMessaging.cjs');
+const {
+  isExpectedSendMessageError,
+  getBroadcastTargetTabIds,
+} = require('../src/lib/tabMessaging.cjs');
 
 describe('isExpectedSendMessageError', () => {
   test('treats "receiving end does not exist" as expected (tab has no content script)', () => {
@@ -29,9 +32,7 @@ describe('isExpectedSendMessageError', () => {
 
 describe('getBroadcastTargetTabIds', () => {
   test('includes tabs currently in history', () => {
-    expect(getBroadcastTargetTabIds([], [1, 2, 3])).toEqual(
-      expect.arrayContaining([1, 2, 3])
-    );
+    expect(getBroadcastTargetTabIds([], [1, 2, 3])).toEqual(expect.arrayContaining([1, 2, 3]));
   });
 
   test('includes tabs that just fell out of history so their badge can be cleared', () => {
