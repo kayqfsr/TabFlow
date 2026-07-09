@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TabFlow - Configurações</title>
+    <title>TabFlow - Settings</title>
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
@@ -22,7 +22,7 @@
           </svg>
           <div class="logo-text">
             <h1>TabFlow</h1>
-            <p class="subtitle">Configurações de rastreamento de abas</p>
+            <p class="subtitle">Tab tracking settings</p>
           </div>
         </div>
       </header>
@@ -32,14 +32,14 @@
         <!-- History Size Section -->
         <section class="setting-section">
           <div class="setting-header">
-            <h2>Tamanho do histórico</h2>
+            <h2>History size</h2>
             <span class="badge" id="currentValue">5</span>
           </div>
-          <p class="description">Quantidade de abas recentes rastreadas com badges numerados.</p>
+          <p class="description">Number of recent tabs tracked with numbered badges.</p>
 
           <div class="input-group">
             <label for="maxHistorySize" class="input-label">
-              <span>Número de abas</span>
+              <span>Number of tabs</span>
               <span class="range-value" id="rangeValue">5</span>
             </label>
             <input type="range" id="maxHistorySize" min="3" max="10" value="5" class="slider" />
@@ -51,9 +51,9 @@
 
           <!-- Preview -->
           <div class="preview-section">
-            <h3>Visualização</h3>
+            <h3>Preview</h3>
             <div class="badge-preview" id="badgePreview">
-              <!-- Badges serão inseridos via JS -->
+              <!-- Badges are inserted via JS -->
             </div>
           </div>
         </section>
@@ -61,20 +61,20 @@
         <!-- Badge Color Section -->
         <section class="setting-section">
           <div class="setting-header">
-            <h2>Cores dos badges</h2>
+            <h2>Badge colors</h2>
           </div>
           <div class="color-info">
             <div class="color-item">
               <span class="color-dot" style="background: #ff4444"></span>
-              <span class="color-label">Posição 1 (mais recente)</span>
+              <span class="color-label">Position 1 (most recent)</span>
             </div>
             <div class="color-item">
               <span class="color-dot" style="background: #ff8800"></span>
-              <span class="color-label">Posição 2</span>
+              <span class="color-label">Position 2</span>
             </div>
             <div class="color-item">
               <span class="color-dot" style="background: #ffff00"></span>
-              <span class="color-label">Posição 3+</span>
+              <span class="color-label">Position 3+</span>
             </div>
           </div>
         </section>
@@ -88,7 +88,7 @@
               <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
-            <span>Configurações salvas com sucesso.</span>
+            <span>Settings saved successfully.</span>
           </div>
 
           <div class="error-message" id="errorMessage">
@@ -103,7 +103,7 @@
 
         <div class="footer-row">
           <span class="version">v2.0.1</span>
-          <button id="saveButton" class="btn-primary">Salvar configurações</button>
+          <button id="saveButton" class="btn-primary">Save settings</button>
         </div>
       </footer>
     </div>

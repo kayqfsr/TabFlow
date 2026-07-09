@@ -199,6 +199,9 @@ npm run test:coverage
 # Lint and format check
 npm run lint
 npm run format:check
+
+# Package a Chrome Web Store-ready zip (dist/TabFlow-v<version>.zip)
+npm run package
 ```
 
 ---
@@ -254,6 +257,8 @@ TabFlow/
   - `http://*/*`, `https://*/*` — Favicon access on regular web pages only (internal browser pages such as `chrome://` are never touched). The content script is declared statically in `manifest.json`, so no runtime `scripting` permission is requested.
 - **Source code public:** Full transparency; anyone can audit the code
 - **Minimal favicon disclosure:** the badge drawn into a page's favicon is derived by a single pure function (`getBadgeConfig`, see `src/lib/badgeConfig.js`) that only ever encodes the tab's own recency rank (a single digit) — never a tab title, URL, or any other tab's identifier. This is enforced by unit tests, since any page can read its own favicon `href` via the DOM.
+
+See [PRIVACY.md](./PRIVACY.md) for the full privacy policy.
 
 ---
 

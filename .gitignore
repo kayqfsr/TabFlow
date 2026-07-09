@@ -2,8 +2,6 @@
 node_modules/
 
 # Distribution & Build
-TabFlow_Dist/
-TabFlow_v2.0.1.zip
 dist/
 build/
 
