@@ -373,6 +373,8 @@ This project was built with:
 - **MutationObserver API** (favicon monitoring)
 - **Chrome Storage API** (state persistence)
 - **Jest** (unit testing)
+- **ESLint + Prettier** (linting and formatting)
+- **GitHub Actions** (CI: lint, format check, tests)
 - **CSS3** (minimalist, corporate-styled UI with animated transitions)
 
 ---
@@ -389,7 +391,7 @@ A: No. TabFlow is 100% offline and does not collect, store, or transmit any data
 A: Some sites dynamically update favicons (notifications, status changes). TabFlow's MutationObserver should catch and reapply badges automatically.
 
 **Q: Can I customize badge colors?**  
-A: Not yet, but it's on the roadmap! Currently uses red (#FF4444), orange (#FF8800), and yellow (#FFFF00).
+A: Not currently. Colors are fixed to red (#FF4444) for position 1, orange (#FF8800) for position 2, and yellow (#FFFF00) for position 3+.
 
 **Q: How is this different from tab session managers?**  
 A: TabFlow is lightweight and visual-only. It doesn't restore sessions or manage tab groups—just shows which tabs you recently used via favicon badges.
