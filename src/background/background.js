@@ -1,5 +1,6 @@
 // background.js
 import { TabHistoryManager } from '../lib/historyLogic.js';
+import { isExpectedSendMessageError } from '../lib/tabMessaging.js';
 
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
@@ -77,11 +78,14 @@ function broadcastHistory() {
   chrome.tabs.query({}, function(tabs) {
     tabs.forEach(function(tab) {
       const position = historyManager.getPosition(tab.id);
-      // catch ignora erros de abas que não carregaram ou são do sistema
       chrome.tabs.sendMessage(tab.id, {
         action: 'updateHistory',
         position: position
-      }).catch(() => {}); 
+      }).catch((error) => {
+        if (!isExpectedSendMessageError(error)) {
+          console.error('[TabFlow] Erro ao notificar aba', tab.id, error);
+        }
+      });
     });
   });
 }
