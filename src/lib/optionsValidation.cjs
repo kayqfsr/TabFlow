@@ -1,7 +1,7 @@
 // optionsValidation.cjs - CommonJS wrapper for Jest tests
-const MIN_HISTORY_SIZE = 3;
-const MAX_HISTORY_SIZE = 10;
-const RANGE_ERROR_MESSAGE = 'Por favor, escolha um valor entre 3 e 10.';
+const { MIN_HISTORY_SIZE, MAX_HISTORY_SIZE } = require('./messageValidation.cjs');
+
+const RANGE_ERROR_MESSAGE = `Por favor, escolha um valor entre ${MIN_HISTORY_SIZE} e ${MAX_HISTORY_SIZE}.`;
 
 function getSaveValidationError(maxHistorySize) {
   if (
@@ -14,4 +14,4 @@ function getSaveValidationError(maxHistorySize) {
   return null;
 }
 
-module.exports = { getSaveValidationError };
+module.exports = { getSaveValidationError, MIN_HISTORY_SIZE, MAX_HISTORY_SIZE };
