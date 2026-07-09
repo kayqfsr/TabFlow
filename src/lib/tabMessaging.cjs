@@ -12,4 +12,8 @@ function isExpectedSendMessageError(error) {
   return EXPECTED_ERROR_PATTERNS.some((pattern) => pattern.test(error.message));
 }
 
-module.exports = { isExpectedSendMessageError };
+function getBroadcastTargetTabIds(previousTabIds, currentTabIds) {
+  return Array.from(new Set([...previousTabIds, ...currentTabIds]));
+}
+
+module.exports = { isExpectedSendMessageError, getBroadcastTargetTabIds };
