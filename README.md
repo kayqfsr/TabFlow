@@ -176,9 +176,9 @@ npm test
    - Select the `src` folder
 
 3. **Configure:**
-   - Click the extension icon in your toolbar
-   - Click **Options** to adjust history size (3-10 tabs)
-   - See live badge preview
+   - Click the extension icon in your toolbar — it opens the settings panel directly
+   - Adjust history size (3-10 tabs) with the slider and see the live badge preview
+   - Click **Save settings**
 
 ### For Developers
 
