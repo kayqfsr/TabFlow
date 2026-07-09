@@ -5,6 +5,12 @@ let canvas = document.createElement('canvas');
 let ctx = canvas.getContext('2d');
 let currentPosition = -1;
 let faviconObserver = null;
+let getBadgeConfig = null;
+
+import(chrome.runtime.getURL('lib/badgeConfig.js')).then(function(module) {
+  getBadgeConfig = module.getBadgeConfig;
+  applyFaviconWithBadge();
+});
 
 // Inicializa
 if (document.readyState === 'loading') {
@@ -73,8 +79,13 @@ function applyFaviconWithBadge() {
 }
 
 function manipulateFaviconWithBadge(position) {
+  if (!getBadgeConfig) return;
+
+  const badge = getBadgeConfig(position);
+  if (!badge) return;
+
   let faviconLink = document.querySelector('link[rel*="icon"]');
-  
+
   // Cria se não existir
   if (!faviconLink) {
     faviconLink = document.createElement('link');
@@ -92,12 +103,8 @@ function manipulateFaviconWithBadge(position) {
   canvas.height = 32;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Cores
-  const colors = ['#FF4444', '#FF8800', '#FFFF00']; // 1=Vermelho, 2=Laranja, 3=Amarelo
-  const bgColor = colors[position] || '#CCCCCC';
-
   // Fundo Quadrado Arredondado
-  ctx.fillStyle = bgColor;
+  ctx.fillStyle = badge.backgroundColor;
   ctx.beginPath();
   // roundRect é moderno, fallback para rect simples se der erro
   if (ctx.roundRect) {
@@ -108,11 +115,11 @@ function manipulateFaviconWithBadge(position) {
   ctx.fill();
 
   // Número
-  ctx.fillStyle = (position > 1) ? '#000000' : '#FFFFFF'; // Texto preto no amarelo para contraste
+  ctx.fillStyle = badge.textColor;
   ctx.font = 'bold 20px Arial';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText((position + 1).toString(), canvas.width / 2, canvas.height / 2 + 2);
+  ctx.fillText(badge.label, canvas.width / 2, canvas.height / 2 + 2);
 
   // Aplica sem disparar loop (graças ao check lá em cima)
   faviconLink.href = canvas.toDataURL('image/png');
