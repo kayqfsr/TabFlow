@@ -5,7 +5,10 @@ let canvas = document.createElement('canvas');
 let ctx = canvas.getContext('2d');
 let currentPosition = -1;
 let faviconObserver = null;
-const getBadgeConfig = globalThis.TabFlowLib.getBadgeConfig;
+// Aliased (not just "getBadgeConfig") because badgeConfig.js's own top-level
+// `function getBadgeConfig` declaration shares this same content-script
+// global scope — redeclaring the name here would throw a SyntaxError.
+const readBadgeConfig = globalThis.TabFlowLib.getBadgeConfig;
 
 globalThis.TabFlowLib.waitForHead(document, initFaviconObserver);
 
@@ -78,9 +81,9 @@ function applyFaviconWithBadge() {
 }
 
 function manipulateFaviconWithBadge(position) {
-  if (!getBadgeConfig) return;
+  if (!readBadgeConfig) return;
 
-  const badge = getBadgeConfig(position);
+  const badge = readBadgeConfig(position);
   if (!badge) return;
 
   let faviconLink = document.querySelector('link[rel*="icon"]');
