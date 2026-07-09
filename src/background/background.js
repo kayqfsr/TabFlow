@@ -1,7 +1,7 @@
 // background.js
 import { TabHistoryManager } from '../lib/historyLogic.js';
 import { isValidMaxHistorySize, isTrustedSender } from '../lib/messageValidation.js';
-import { isExpectedSendMessageError } from '../lib/tabMessaging.js';
+import { isExpectedSendMessageError, getBroadcastTargetTabIds } from '../lib/tabMessaging.js';
 import { isSessionStorageAvailable } from '../lib/storageAvailability.js';
 import { resolvePositionResponse } from '../lib/positionRequest.js';
 
@@ -10,6 +10,10 @@ const STORAGE_KEY = 'tabHistory';
 
 // Flag para garantir que o histórico foi carregado antes de processar eventos
 let isHistoryLoaded = false;
+
+// IDs das abas notificadas no último broadcast, para saber quais precisam
+// ser limpas (position -1) quando saem do histórico rastreado
+let lastBroadcastTabIds = [];
 
 // Inicialização: carrega histórico salvo e configurações
 (async function init() {
@@ -85,19 +89,22 @@ chrome.tabs.onActivated.addListener(async function(activeInfo) {
 });
 
 function broadcastHistory() {
-  chrome.tabs.query({}, function(tabs) {
-    tabs.forEach(function(tab) {
-      const position = historyManager.getPosition(tab.id);
-      chrome.tabs.sendMessage(tab.id, {
-        action: 'updateHistory',
-        position: position
-      }).catch((error) => {
-        if (!isExpectedSendMessageError(error)) {
-          console.error('[TabFlow] Erro ao notificar aba', tab.id, error);
-        }
-      });
+  const currentTabIds = historyManager.getHistory();
+  const targetTabIds = getBroadcastTargetTabIds(lastBroadcastTabIds, currentTabIds);
+
+  targetTabIds.forEach(function(tabId) {
+    const position = historyManager.getPosition(tabId);
+    chrome.tabs.sendMessage(tabId, {
+      action: 'updateHistory',
+      position: position
+    }).catch((error) => {
+      if (!isExpectedSendMessageError(error)) {
+        console.error('[TabFlow] Erro ao notificar aba', tabId, error);
+      }
     });
   });
+
+  lastBroadcastTabIds = currentTabIds;
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

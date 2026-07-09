@@ -1,4 +1,4 @@
-const { isExpectedSendMessageError } = require('../src/lib/tabMessaging.cjs');
+const { isExpectedSendMessageError, getBroadcastTargetTabIds } = require('../src/lib/tabMessaging.cjs');
 
 describe('isExpectedSendMessageError', () => {
   test('treats "receiving end does not exist" as expected (tab has no content script)', () => {
@@ -24,5 +24,28 @@ describe('isExpectedSendMessageError', () => {
   test('treats a missing/malformed error as unexpected', () => {
     expect(isExpectedSendMessageError(null)).toBe(false);
     expect(isExpectedSendMessageError({})).toBe(false);
+  });
+});
+
+describe('getBroadcastTargetTabIds', () => {
+  test('includes tabs currently in history', () => {
+    expect(getBroadcastTargetTabIds([], [1, 2, 3])).toEqual(
+      expect.arrayContaining([1, 2, 3])
+    );
+  });
+
+  test('includes tabs that just fell out of history so their badge can be cleared', () => {
+    const targets = getBroadcastTargetTabIds([1, 2, 3], [1, 2]);
+    expect(targets).toEqual(expect.arrayContaining([1, 2, 3]));
+  });
+
+  test('never includes a tab that was neither previously nor currently tracked', () => {
+    const targets = getBroadcastTargetTabIds([1, 2], [1, 3]);
+    expect(targets).not.toContain(99);
+  });
+
+  test('does not duplicate tab ids present in both sets', () => {
+    const targets = getBroadcastTargetTabIds([1, 2], [2, 3]);
+    expect(targets).toHaveLength(3);
   });
 });
