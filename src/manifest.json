@@ -12,14 +12,8 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["content/content.js"],
+      "js": ["lib/badgeConfig.js", "lib/headObserver.js", "content/content.js"],
       "run_at": "document_start"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["lib/headObserver.js", "lib/badgeConfig.js"],
-      "matches": ["http://*/*", "https://*/*"]
     }
   ],
   "action": {

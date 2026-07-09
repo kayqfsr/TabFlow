@@ -297,6 +297,7 @@ Before/After screenshots
    - Runs on every page
    - Manipulates favicons
    - Watches for favicon mutations
+   - Depends on `src/lib/badgeConfig.js` and `src/lib/headObserver.js`, which the manifest injects as classic scripts *before* `content.js` (see `content_scripts.js` order) and expose their functions on `globalThis.TabFlowLib`. This keeps the two helper files out of `web_accessible_resources`, since nothing outside the extension's own content script needs to reach them.
 
 4. **`src/options/`** — Settings UI
    - Modern gradient design

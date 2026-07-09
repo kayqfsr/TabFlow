@@ -1,20 +1,13 @@
-// content.js - Script de conteúdo (Versão Corrigida Anti-Loop)
+// content.js - Script de conteúdo
 
 let originalFavicon = null;
 let canvas = document.createElement('canvas');
 let ctx = canvas.getContext('2d');
 let currentPosition = -1;
 let faviconObserver = null;
-let getBadgeConfig = null;
+const getBadgeConfig = globalThis.TabFlowLib.getBadgeConfig;
 
-import(chrome.runtime.getURL('lib/badgeConfig.js')).then(function(module) {
-  getBadgeConfig = module.getBadgeConfig;
-  applyFaviconWithBadge();
-});
-
-import(chrome.runtime.getURL('lib/headObserver.js')).then(function(module) {
-  module.waitForHead(document, initFaviconObserver);
-});
+globalThis.TabFlowLib.waitForHead(document, initFaviconObserver);
 
 requestCurrentPosition();
 
@@ -37,7 +30,7 @@ function initFaviconObserver(head) {
       if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
         const target = mutation.target;
         if (target.tagName === 'LINK' && (target.rel.includes('icon'))) {
-          // PROTETOR CONTRA LOOP: Se o novo link for o nosso próprio badge, ignora!
+          // Ignora mutações causadas pelo próprio badge para não entrar em loop de redesenho
           if (target.href.startsWith('data:image/png')) return;
           
           originalFavicon = target.href; // Atualiza o original se o site mudou

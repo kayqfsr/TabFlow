@@ -1,8 +1,8 @@
-// badgeConfig.js
+// badgeConfig.js - loaded as a classic content script, exposes TabFlowLib.getBadgeConfig
 const BADGE_COLORS = ['#FF4444', '#FF8800', '#FFFF00'];
 const DEFAULT_BADGE_COLOR = '#CCCCCC';
 
-export function getBadgeConfig(position) {
+function getBadgeConfig(position) {
   if (!Number.isInteger(position) || position < 0) {
     return null;
   }
@@ -13,3 +13,6 @@ export function getBadgeConfig(position) {
     label: String(position + 1),
   };
 }
+
+globalThis.TabFlowLib = globalThis.TabFlowLib || {};
+globalThis.TabFlowLib.getBadgeConfig = getBadgeConfig;
