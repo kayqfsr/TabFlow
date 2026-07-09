@@ -42,6 +42,15 @@ describe('manifest.json permissions', () => {
     });
   });
 
+  test('declares an explicit, restrictive extension_pages CSP', () => {
+    const csp = manifest.content_security_policy?.extension_pages;
+    expect(typeof csp).toBe('string');
+    expect(csp).toMatch(/script-src 'self'/);
+    expect(csp).toMatch(/object-src 'self'/);
+    expect(csp).not.toMatch(/unsafe-inline/);
+    expect(csp).not.toMatch(/unsafe-eval/);
+  });
+
   test('does not declare any web accessible resources', () => {
     expect(manifest.web_accessible_resources ?? []).toHaveLength(0);
   });
