@@ -3,6 +3,7 @@ import { TabHistoryManager } from '../lib/historyLogic.js';
 import { isValidMaxHistorySize, isTrustedSender } from '../lib/messageValidation.js';
 import { isExpectedSendMessageError } from '../lib/tabMessaging.js';
 import { isSessionStorageAvailable } from '../lib/storageAvailability.js';
+import { resolvePositionResponse } from '../lib/positionRequest.js';
 
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
@@ -106,6 +107,10 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
   if (request.action === 'getHistory') {
     sendResponse({ history: historyManager.getHistory() });
+  } else if (request.action === 'getPosition') {
+    if (sender.tab) {
+      sendResponse(resolvePositionResponse(historyManager, sender.tab.id));
+    }
   } else if (request.action === 'updateSettings') {
     if (!isValidMaxHistorySize(request.maxHistorySize)) {
       return;
