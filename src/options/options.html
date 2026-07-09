@@ -14,9 +14,11 @@
         <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/>
         </svg>
-        <h1>TabFlow</h1>
+        <div class="logo-text">
+          <h1>TabFlow</h1>
+          <p class="subtitle">Configurações de rastreamento de abas</p>
+        </div>
       </div>
-      <p class="subtitle">Configurações de Rastreamento de Abas</p>
     </header>
 
     <!-- Main Content -->
@@ -24,24 +26,24 @@
       <!-- History Size Section -->
       <section class="setting-section">
         <div class="setting-header">
-          <h2>Tamanho do Histórico</h2>
+          <h2>Tamanho do histórico</h2>
           <span class="badge" id="currentValue">5</span>
         </div>
         <p class="description">
-          Defina quantas abas recentes devem ser rastreadas com badges numerados.
+          Quantidade de abas recentes rastreadas com badges numerados.
         </p>
-        
+
         <div class="input-group">
           <label for="maxHistorySize" class="input-label">
             <span>Número de abas</span>
             <span class="range-value" id="rangeValue">5</span>
           </label>
-          <input 
-            type="range" 
-            id="maxHistorySize" 
-            min="3" 
-            max="10" 
-            value="5" 
+          <input
+            type="range"
+            id="maxHistorySize"
+            min="3"
+            max="10"
+            value="5"
             class="slider"
           >
           <div class="range-labels">
@@ -62,12 +64,12 @@
       <!-- Badge Color Section -->
       <section class="setting-section">
         <div class="setting-header">
-          <h2>Cores dos Badges</h2>
+          <h2>Cores dos badges</h2>
         </div>
         <div class="color-info">
           <div class="color-item">
             <span class="color-dot" style="background: #FF4444;"></span>
-            <span class="color-label">Posição 1 (Mais Recente)</span>
+            <span class="color-label">Posição 1 (mais recente)</span>
           </div>
           <div class="color-item">
             <span class="color-dot" style="background: #FF8800;"></span>
@@ -86,11 +88,11 @@
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-value" id="totalTabs">-</div>
-            <div class="stat-label">Abas Abertas</div>
+            <div class="stat-label">Abas abertas</div>
           </div>
           <div class="stat-card">
             <div class="stat-value" id="trackedTabs">-</div>
-            <div class="stat-label">Abas Rastreadas</div>
+            <div class="stat-label">Abas rastreadas</div>
           </div>
         </div>
       </section>
@@ -98,33 +100,31 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <button id="saveButton" class="btn-primary">
-        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
-        </svg>
-        Salvar Configurações
-      </button>
-      
-      <div class="success-message" id="successMessage">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
-          <polyline points="22 4 12 14.01 9 11.01"/>
-        </svg>
-        <span>Configurações salvas com sucesso!</span>
+      <div class="status-messages">
+        <div class="success-message" id="successMessage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span>Configurações salvas com sucesso.</span>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span id="errorMessageText"></span>
+        </div>
       </div>
 
-      <div class="error-message" id="errorMessage">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <span id="errorMessageText"></span>
+      <div class="footer-row">
+        <span class="version">v2.0.1</span>
+        <button id="saveButton" class="btn-primary">
+          Salvar configurações
+        </button>
       </div>
-
-      <div class="version">v2.0.1</div>
     </footer>
   </div>
 
