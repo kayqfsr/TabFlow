@@ -13,14 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const errorMessage = document.getElementById('errorMessage');
   const errorMessageText = document.getElementById('errorMessageText');
   const badgePreview = document.getElementById('badgePreview');
-  const totalTabsElement = document.getElementById('totalTabs');
-  const trackedTabsElement = document.getElementById('trackedTabs');
 
   // Carrega as configurações atuais
   loadSettings();
-
-  // Carrega estatísticas
-  loadStats();
 
   // Atualiza preview quando o slider muda
   maxHistorySizeInput.addEventListener('input', function() {
@@ -64,9 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Mostra mensagem de sucesso
       showSuccess();
-
-      // Recarrega estatísticas
-      setTimeout(loadStats, 500);
     });
   }
 
@@ -106,19 +98,5 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       errorMessage.classList.remove('show');
     }, 3000);
-  }
-
-  function loadStats() {
-    // Obtém total de abas abertas
-    chrome.tabs.query({}, function(tabs) {
-      totalTabsElement.textContent = tabs.length;
-    });
-
-    // Obtém histórico atual
-    chrome.runtime.sendMessage({ action: 'getHistory' }, function(response) {
-      if (response && response.history) {
-        trackedTabsElement.textContent = response.history.length;
-      }
-    });
   }
 });
