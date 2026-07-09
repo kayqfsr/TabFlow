@@ -2,6 +2,7 @@
 // Carrega e salva as configurações do usuário com interface moderna
 
 import { getSaveValidationError } from '../lib/optionsValidation.js';
+import { BADGE_COLORS } from '../lib/badgeColors.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   const maxHistorySizeInput = document.getElementById('maxHistorySize');
@@ -14,9 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const badgePreview = document.getElementById('badgePreview');
   const totalTabsElement = document.getElementById('totalTabs');
   const trackedTabsElement = document.getElementById('trackedTabs');
-
-  // Cores dos badges
-  const BADGE_COLORS = ['#FF4444', '#FF8800', '#FFFF00'];
 
   // Carrega as configurações atuais
   loadSettings();

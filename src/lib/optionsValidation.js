@@ -1,7 +1,8 @@
 // optionsValidation.js
-const MIN_HISTORY_SIZE = 3;
-const MAX_HISTORY_SIZE = 10;
-const RANGE_ERROR_MESSAGE = 'Por favor, escolha um valor entre 3 e 10.';
+export { MIN_HISTORY_SIZE, MAX_HISTORY_SIZE } from './messageValidation.js';
+import { MIN_HISTORY_SIZE, MAX_HISTORY_SIZE } from './messageValidation.js';
+
+const RANGE_ERROR_MESSAGE = `Por favor, escolha um valor entre ${MIN_HISTORY_SIZE} e ${MAX_HISTORY_SIZE}.`;
 
 export function getSaveValidationError(maxHistorySize) {
   if (
