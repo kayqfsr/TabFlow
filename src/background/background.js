@@ -2,6 +2,7 @@
 import { TabHistoryManager } from '../lib/historyLogic.js';
 import { isValidMaxHistorySize, isTrustedSender } from '../lib/messageValidation.js';
 import { isExpectedSendMessageError } from '../lib/tabMessaging.js';
+import { isSessionStorageAvailable } from '../lib/storageAvailability.js';
 
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
@@ -30,6 +31,11 @@ chrome.runtime.onInstalled.addListener(async () => {
  * Carrega o histórico salvo do chrome.storage.session
  */
 async function loadHistoryFromStorage() {
+  if (!isSessionStorageAvailable(chrome.storage)) {
+    console.warn('[TabFlow] chrome.storage.session indisponível; histórico não será persistido entre reinícios do service worker.');
+    return;
+  }
+
   return new Promise((resolve) => {
     chrome.storage.session.get([STORAGE_KEY], function(result) {
       if (result[STORAGE_KEY]) {
@@ -45,6 +51,8 @@ async function loadHistoryFromStorage() {
  * Salva o histórico atual no chrome.storage.session
  */
 function saveHistoryToStorage() {
+  if (!isSessionStorageAvailable(chrome.storage)) return;
+
   const history = historyManager.getHistory();
   chrome.storage.session.set({ [STORAGE_KEY]: history }, function() {
     if (chrome.runtime.lastError) {

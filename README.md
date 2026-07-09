@@ -228,7 +228,7 @@ TabFlow/
 ## 🔐 Security & Privacy
 
 - **Zero tracking:** TabFlow collects NO analytics, telemetry, or user data
-- **Local-only:** All state stored in `chrome.storage.session` (cleared on browser close)
+- **Local-only:** All state stored in `chrome.storage.session` (cleared on browser close). On browsers without `chrome.storage.session` (Chrome < 102), TabFlow degrades gracefully to in-memory-only history instead of crashing.
 - **Transparent permissions:**
   - `tabs` — Read tab metadata and activation events
   - `storage` — Save/restore user history and settings
