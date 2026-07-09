@@ -1,12 +1,16 @@
 // options.js - Script para a página de opções
 // Carrega e salva as configurações do usuário com interface moderna
 
+import { getSaveValidationError } from '../lib/optionsValidation.js';
+
 document.addEventListener('DOMContentLoaded', function() {
   const maxHistorySizeInput = document.getElementById('maxHistorySize');
   const rangeValue = document.getElementById('rangeValue');
   const currentValue = document.getElementById('currentValue');
   const saveButton = document.getElementById('saveButton');
   const successMessage = document.getElementById('successMessage');
+  const errorMessage = document.getElementById('errorMessage');
+  const errorMessageText = document.getElementById('errorMessageText');
   const badgePreview = document.getElementById('badgePreview');
   const totalTabsElement = document.getElementById('totalTabs');
   const trackedTabsElement = document.getElementById('trackedTabs');
@@ -43,9 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function saveSettings() {
     const maxHistorySize = parseInt(maxHistorySizeInput.value);
-    
-    if (maxHistorySize < 3 || maxHistorySize > 10) {
-      showError('Por favor, escolha um valor entre 3 e 10.');
+    const validationError = getSaveValidationError(maxHistorySize);
+
+    if (validationError) {
+      showError(validationError);
       return;
     }
 
@@ -97,8 +102,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showError(message) {
-    // Implementar notificação de erro se necessário
-    alert(message);
+    errorMessageText.textContent = message;
+    errorMessage.classList.add('show');
+
+    setTimeout(() => {
+      errorMessage.classList.remove('show');
+    }, 3000);
   }
 
   function loadStats() {
