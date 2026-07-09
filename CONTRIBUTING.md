@@ -331,6 +331,16 @@ Before/After screenshots
 
 TabFlow requests `host_permissions` and `content_scripts.matches` for all `http(s)://*/*` origins. This is broader than `activeTab` on purpose: the badge must render on tabs that are *not* currently active (any tab present in the tracked history gets its favicon updated on every activation event), and the content script needs to run at `document_start` on page load without waiting for user interaction. `activeTab` only grants access after an explicit user gesture on the active tab, which is incompatible with these requirements. Only permissions the code actually calls (`tabs`, `storage`) are declared — do not add `scripting` or other capabilities unless a change genuinely requires them.
 
+### Accepted Risk: Favicon Position Side-Channel
+
+Any page can read its own `<link rel="icon">` element and observe the badge TabFlow draws on it. Since the badge encodes the tab's 1-based position in the tracked history (1 through `maxHistorySize`, at most 10), a malicious page can infer *that number* — e.g. "this tab is currently rank 2 in the user's recent-tab history."
+
+This is an accepted, intentional trade-off of the favicon-badge design, not a bug:
+- `getBadgeConfig(position)` (`src/lib/badgeConfig.js`) takes only the numeric position as input and returns only `backgroundColor`, `textColor`, and `label` — it has no access to, and therefore cannot leak, the tab's URL, title, or any other tab's data. `tests/badgeConfig.test.js` asserts this shape as a regression guard.
+- No mitigation removes the position leak entirely without dropping the favicon-badge feature itself, since the badge's visual purpose *is* to expose the position to the user glancing at their tab strip.
+
+If this residual leak becomes unacceptable for a future use case, the alternative is to move the position indicator out of the favicon (e.g. into the extension's toolbar badge via `chrome.action.setBadgeText`, which pages cannot observe) instead of drawing it into the page-visible favicon.
+
 ## 🎯 Priority Areas for Contribution
 
 **Good for first-time contributors:**

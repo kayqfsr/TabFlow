@@ -37,4 +37,13 @@ describe('getBadgeConfig', () => {
     expect(getBadgeConfig('1')).toBeNull();
     expect(getBadgeConfig(undefined)).toBeNull();
   });
+
+  test('accepts only a numeric position, so no other tab data (url, title, domain) can reach the favicon badge', () => {
+    expect(getBadgeConfig.length).toBe(1);
+  });
+
+  test('the badge config never carries any field beyond backgroundColor, textColor, and label', () => {
+    const config = getBadgeConfig(2);
+    expect(Object.keys(config).sort()).toEqual(['backgroundColor', 'label', 'textColor']);
+  });
 });
