@@ -82,6 +82,8 @@ content.js: applyFaviconWithBadge()
 User sees badge instantly
 ```
 
+Whenever a content script starts (e.g. after in-page navigation, not just tab switches), it also actively asks the service worker for its own current position via a `getPosition` message, instead of waiting passively for the next broadcast — this keeps the badge accurate even if a broadcast happened while the tab was reloading.
+
 ### Core Components
 
 #### 1. `src/lib/historyLogic.js` (Pure Business Logic)

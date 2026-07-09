@@ -1,5 +1,6 @@
 // background.js
 import { TabHistoryManager } from '../lib/historyLogic.js';
+import { resolvePositionResponse } from '../lib/positionRequest.js';
 
 const historyManager = new TabHistoryManager(5);
 const STORAGE_KEY = 'tabHistory';
@@ -89,6 +90,10 @@ function broadcastHistory() {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === 'getHistory') {
     sendResponse({ history: historyManager.getHistory() });
+  } else if (request.action === 'getPosition') {
+    if (sender.tab) {
+      sendResponse(resolvePositionResponse(historyManager, sender.tab.id));
+    }
   } else if (request.action === 'updateSettings') {
     historyManager.setMaxSize(request.maxHistorySize);
     chrome.storage.sync.set({ maxHistorySize: request.maxHistorySize });

@@ -13,6 +13,18 @@ if (document.readyState === 'loading') {
   initFaviconObserver();
 }
 
+requestCurrentPosition();
+
+function requestCurrentPosition() {
+  chrome.runtime.sendMessage({ action: 'getPosition' }, function(response) {
+    if (chrome.runtime.lastError) return;
+    if (response && typeof response.position === 'number') {
+      currentPosition = response.position;
+      applyFaviconWithBadge();
+    }
+  });
+}
+
 function initFaviconObserver() {
   const head = document.head;
   if (!head) return;
