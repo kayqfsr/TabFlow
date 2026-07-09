@@ -187,4 +187,20 @@ describe('.js/.cjs module pairs stay behaviorally in sync', () => {
     `;
     expect(runEsmProbe('src/lib/headObserver.js', probe)).toEqual(cjsResults);
   });
+
+  test('faviconLink.js (classic content script) matches faviconLink.cjs', () => {
+    const { isFaviconRel } = require('../src/lib/faviconLink.cjs');
+    const probe = `
+      return {
+        icon: globalThis.TabFlowLib.isFaviconRel('icon'),
+        shortcutIcon: globalThis.TabFlowLib.isFaviconRel('shortcut icon'),
+        appleTouchIcon: globalThis.TabFlowLib.isFaviconRel('apple-touch-icon'),
+      };
+    `;
+    expect(runEsmProbe('src/lib/faviconLink.js', probe)).toEqual({
+      icon: isFaviconRel('icon'),
+      shortcutIcon: isFaviconRel('shortcut icon'),
+      appleTouchIcon: isFaviconRel('apple-touch-icon'),
+    });
+  });
 });

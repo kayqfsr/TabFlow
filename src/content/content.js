@@ -5,14 +5,29 @@ let canvas = document.createElement('canvas');
 let ctx = canvas.getContext('2d');
 let currentPosition = -1;
 let faviconObserver = null;
-// Aliased (not just "getBadgeConfig") because badgeConfig.js's own top-level
-// `function getBadgeConfig` declaration shares this same content-script
-// global scope — redeclaring the name here would throw a SyntaxError.
+// Aliased (not just "getBadgeConfig"/"isFaviconRel") because badgeConfig.js
+// and faviconLink.js each declare a top-level function with those names in
+// this same content-script global scope — redeclaring the name here would
+// throw a SyntaxError.
 const readBadgeConfig = globalThis.TabFlowLib.getBadgeConfig;
+const checkFaviconRel = globalThis.TabFlowLib.isFaviconRel;
 
 globalThis.TabFlowLib.waitForHead(document, initFaviconObserver);
 
 requestCurrentPosition();
+
+// Chrome only treats a link whose rel *token list* contains "icon" (e.g.
+// rel="icon" or rel="shortcut icon") as the tab favicon. `[rel*="icon"]`
+// substring-matches unrelated links too — apple-touch-icon, fluid-icon,
+// mask-icon — and many sites (Wikipedia, GitHub) list one of those before
+// the real favicon link, so a substring match silently edits the wrong tag.
+function findFaviconLink() {
+  const links = document.querySelectorAll('link[rel]');
+  for (const link of links) {
+    if (checkFaviconRel(link.rel)) return link;
+  }
+  return null;
+}
 
 function requestCurrentPosition() {
   chrome.runtime.sendMessage({ action: 'getPosition' }, function (response) {
@@ -32,7 +47,7 @@ function initFaviconObserver(head) {
       // Check for attribute changes (href)
       if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
         const target = mutation.target;
-        if (target.tagName === 'LINK' && target.rel.includes('icon')) {
+        if (target.tagName === 'LINK' && checkFaviconRel(target.rel)) {
           // Ignore mutations caused by our own badge to avoid a redraw loop
           if (target.href.startsWith('data:image/png')) return;
 
@@ -43,7 +58,7 @@ function initFaviconObserver(head) {
       // Check for new favicons added by the site
       else if (mutation.type === 'childList') {
         mutation.addedNodes.forEach(function (node) {
-          if (node.tagName === 'LINK' && node.rel.includes('icon')) {
+          if (node.tagName === 'LINK' && checkFaviconRel(node.rel)) {
             if (node.href.startsWith('data:image/png')) return; // Ignore our own
             shouldReapply = true;
           }
@@ -86,7 +101,7 @@ function manipulateFaviconWithBadge(position) {
   const badge = readBadgeConfig(position);
   if (!badge) return;
 
-  let faviconLink = document.querySelector('link[rel*="icon"]');
+  let faviconLink = findFaviconLink();
 
   // Create it if it doesn't exist
   if (!faviconLink) {
@@ -129,7 +144,7 @@ function manipulateFaviconWithBadge(position) {
 
 function restoreOriginalFavicon() {
   if (originalFavicon) {
-    const faviconLink = document.querySelector('link[rel*="icon"]');
+    const faviconLink = findFaviconLink();
     if (faviconLink && faviconLink.href !== originalFavicon) {
       faviconLink.href = originalFavicon;
     }

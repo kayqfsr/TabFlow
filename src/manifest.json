@@ -15,7 +15,12 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["lib/badgeConfig.js", "lib/headObserver.js", "content/content.js"],
+      "js": [
+        "lib/badgeConfig.js",
+        "lib/headObserver.js",
+        "lib/faviconLink.js",
+        "content/content.js"
+      ],
       "run_at": "document_start"
     }
   ],
