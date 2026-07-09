@@ -233,7 +233,7 @@ TabFlow/
   - `tabs` — Read tab metadata and activation events
   - `storage` — Save/restore user history and settings
   - `scripting` — Inject content script to manipulate favicons
-  - `<all_urls>` — Favicon access required on all sites
+  - `http://*/*`, `https://*/*` — Favicon access on regular web pages only (internal browser pages such as `chrome://` are never touched)
 - **Source code public:** Full transparency; anyone can audit the code
 
 ---
@@ -308,7 +308,7 @@ TabFlow requests the following permissions—all necessary and minimal:
 
 | Permission | Why | Impact |
 |-----------|-----|--------|
-| `host_permissions: <all_urls>` | Favicon access on any site | Required to inject badges |
+| `host_permissions: http(s)://*/*` | Favicon access on regular web pages | Required to inject badges; excludes internal browser pages |
 | `tabs` | Tab activation events | Know when user switches tabs |
 | `storage` | Save settings & history | Persist user preferences |
 | `scripting` | Inject content script | Modify favicons via canvas |

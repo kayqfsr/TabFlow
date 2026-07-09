@@ -4,14 +4,14 @@
   "version": "2.0.1",
   "description": "Visualize your browsing context.",
   "permissions": ["tabs", "storage", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "background/background.js",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["http://*/*", "https://*/*"],
       "js": ["content/content.js"],
       "run_at": "document_start"
     }
