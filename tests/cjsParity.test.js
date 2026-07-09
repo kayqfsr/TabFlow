@@ -140,7 +140,6 @@ describe('.js/.cjs module pairs stay behaviorally in sync', () => {
         history: manager.getHistory(),
         position8: manager.getPosition(8),
         positionMissing: manager.getPosition(999),
-        opacity: manager.calculateOpacity(1),
       };
     }
 
@@ -155,7 +154,6 @@ describe('.js/.cjs module pairs stay behaviorally in sync', () => {
         history: manager.getHistory(),
         position8: manager.getPosition(8),
         positionMissing: manager.getPosition(999),
-        opacity: manager.calculateOpacity(1),
       };
     `;
     expect(runEsmProbe('src/lib/historyLogic.js', probe)).toEqual(buildSnapshot(TabHistoryManager));

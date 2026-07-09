@@ -145,7 +145,7 @@ Whenever a content script starts (e.g. after in-page navigation, not just tab sw
 npm test
 ```
 
-**Test Results (72/72 Passing across 13 suites):**
+**Test Results (71/71 Passing across 13 suites):**
 
 - ✅ History ordering and sorting
 - ✅ Max size enforcement and trimming
@@ -292,7 +292,7 @@ This project demonstrates that AI can be **trusted and effective** for building 
 - ✅ MutationObserver for SPA favicon updates
 - ✅ Configurable history depth
 - ✅ Modern settings UI with live preview
-- ✅ Full test coverage (72/72 tests passing)
+- ✅ Full test coverage (71/71 tests passing)
 
 ### Future Ideas
 

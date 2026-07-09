@@ -33,14 +33,6 @@ export class TabHistoryManager {
   }
 
   /**
-   * Calculates opacity based on position (kept for backwards compatibility, even though badges are used now)
-   */
-  calculateOpacity(position) {
-    if (position === -1) return 1;
-    return Math.max(0.5, 1 - position * 0.25);
-  }
-
-  /**
    * Sets the maximum history size
    * @param {number} size - New maximum size
    */

@@ -15,7 +15,7 @@ describe('TabHistoryManager', () => {
   test('should move existing tab to the beginning when activated', () => {
     manager.activateTab(1);
     manager.activateTab(2);
-    manager.activateTab(1); // Ativar 1 novamente
+    manager.activateTab(1); // Activate 1 again
     expect(manager.getHistory()).toEqual([1, 2]);
   });
 
@@ -23,7 +23,7 @@ describe('TabHistoryManager', () => {
     manager.activateTab(1);
     manager.activateTab(2);
     manager.activateTab(3);
-    manager.activateTab(4); // Deve remover 1
+    manager.activateTab(4); // Should evict 1
     expect(manager.getHistory()).toEqual([4, 3, 2]);
   });
 
@@ -31,18 +31,10 @@ describe('TabHistoryManager', () => {
     manager.activateTab(1);
     manager.activateTab(2);
     manager.activateTab(3);
-    expect(manager.getPosition(3)).toBe(0); // Mais recente
+    expect(manager.getPosition(3)).toBe(0); // Most recent
     expect(manager.getPosition(2)).toBe(1);
     expect(manager.getPosition(1)).toBe(2);
-    expect(manager.getPosition(4)).toBe(-1); // Não existe
-  });
-
-  test('should calculate opacity correctly', () => {
-    expect(manager.calculateOpacity(0)).toBe(1.0); // 100%
-    expect(manager.calculateOpacity(1)).toBe(0.75); // 75%
-    expect(manager.calculateOpacity(2)).toBe(0.5); // 50%
-    expect(manager.calculateOpacity(3)).toBe(0.5); // Mínimo 50%
-    expect(manager.calculateOpacity(-1)).toBe(1); // Sem bolinha
+    expect(manager.getPosition(4)).toBe(-1); // Doesn't exist
   });
 
   test('should update max size and trim history if necessary', () => {
@@ -50,10 +42,10 @@ describe('TabHistoryManager', () => {
     manager.activateTab(2);
     manager.activateTab(3);
     manager.activateTab(4);
-    expect(manager.getHistory()).toEqual([4, 3, 2]); // Limite 3
+    expect(manager.getHistory()).toEqual([4, 3, 2]); // Limit 3
 
     manager.setMaxSize(2);
-    expect(manager.getHistory()).toEqual([4, 3]); // Cortou para 2
+    expect(manager.getHistory()).toEqual([4, 3]); // Trimmed to 2
   });
 
   test('should hydrate history from saved state', () => {
@@ -65,15 +57,15 @@ describe('TabHistoryManager', () => {
   test('should respect max size when hydrating', () => {
     const savedHistory = [10, 20, 30, 40, 50];
     manager.hydrate(savedHistory);
-    expect(manager.getHistory()).toEqual([10, 20, 30]); // Limite 3
+    expect(manager.getHistory()).toEqual([10, 20, 30]); // Limit 3
   });
 
   test('should handle invalid input in hydrate', () => {
     manager.activateTab(1);
     manager.hydrate(null);
-    expect(manager.getHistory()).toEqual([1]); // Não muda se input inválido
+    expect(manager.getHistory()).toEqual([1]); // Unchanged on invalid input
 
     manager.hydrate('invalid');
-    expect(manager.getHistory()).toEqual([1]); // Não muda se input inválido
+    expect(manager.getHistory()).toEqual([1]); // Unchanged on invalid input
   });
 });
