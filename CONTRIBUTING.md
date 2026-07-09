@@ -341,6 +341,10 @@ This is an accepted, intentional trade-off of the favicon-badge design, not a bu
 
 If this residual leak becomes unacceptable for a future use case, the alternative is to move the position indicator out of the favicon (e.g. into the extension's toolbar badge via `chrome.action.setBadgeText`, which pages cannot observe) instead of drawing it into the page-visible favicon.
 
+### `.js`/`.cjs` Module Pairs
+
+Every file in `src/lib/` has a `.cjs` twin (e.g. `badgeColors.js` / `badgeColors.cjs`) because Jest runs test files as CommonJS while the extension itself runs the `.js` files as ES modules (or, for `badgeConfig.js`/`headObserver.js`, as classic content scripts). `tests/cjsParity.test.js` runs each `.js` file in a real Node ESM subprocess and asserts its behavior matches the `.cjs` twin required in-process, so the two can't silently drift apart. When you change the logic in one, update the other and re-run `npm test` — a parity failure means they disagree.
+
 ## 🎯 Priority Areas for Contribution
 
 **Good for first-time contributors:**
